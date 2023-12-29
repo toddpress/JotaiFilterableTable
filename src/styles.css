@@ -73,18 +73,18 @@ body {
   overflow-y: auto;
 }
 
-.FilterableTable .filter-input-wrapper {
+.filter-input-wrapper {
   padding: 0.8rem 0;
   display: flex;
   justify-content: flex-end;
 }
 
-.FilterableTable .filter-input-wrapper input {
+.filter-input-wrapper input {
   display: block;
   width: 100%;
 }
 
-.FilterableTable .filter-input-wrapper > label {
+.filter-input-wrapper > label {
   display: block;
   flex-basis: clamp(200px, 22rem, 50%);
 }
