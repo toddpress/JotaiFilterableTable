@@ -1,90 +1,68 @@
 import React, { useState } from "react";
 import { Suspense } from "react";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useRenderCount } from "./useRenderCount";
 import {
   searchResultsAtom,
   searchTextAtom,
   tableHeadersMapAtom,
+  debouncedSearchTextAtom,
 } from "./molecule";
 
 import "./styles.css";
 
+const FilterInput = () => {
+  const searchText = useAtomValue(searchTextAtom);
+  const handleSearch = useSetAtom(debouncedSearchTextAtom);
+
+  const FILTER_INPUT_LABEL = "Filter results table rows";
+  return (
+    <div className="filter-input-wrapper">
+      <label>
+        <span className="sr-only">{FILTER_INPUT_LABEL}</span>
+        <input
+          type="text"
+          placeholder={FILTER_INPUT_LABEL}
+          value={searchText}
+          onChange={(e) => handleSearch(e.target.value.toLowerCase())}
+        />
+      </label>
+    </div>
+  );
+};
+
+const HighlightText = ({ text, highlight }) => {
+  const parts = text
+    .split(new RegExp(`(${highlight})`, "gi"))
+    .map((part) => part.toLowerCase());
+
+  const highlights = parts.map((part, i) => {
+    return part === highlight ? (
+      <span key={i} className="highlight">
+        {part}
+      </span>
+    ) : (
+      <>{part}</>
+    );
+  });
+
+  return <>{highlights}</>;
+};
+
 const FilterableResponsiveTable = () => {
-  const [searchText, setSearchText] = useAtom(searchTextAtom);
+  const searchText = useAtomValue(debouncedSearchTextAtom);
   const tableData = useAtomValue(searchResultsAtom);
   const tableHeadersMap = useAtomValue(tableHeadersMapAtom);
-
-  const handleSearch = (e: any) => {
-    setSearchText(e.target.value);
-  };
-  //TODO: create Highlight<text: string, highlight: string> component
-  const getHighlightedText = (text: string, highlight: string) => {
-    const parts = text
-      .split(new RegExp(`(${highlight})`, "gi"))
-      .map((part) => part.toLowerCase());
-
-    const highlights = parts.map((part, i) => {
-      return parts.length > 0 && part === highlight.toLowerCase() ? (
-        <span key={i} className="highlight">
-          {part}
-        </span>
-      ) : (
-        <>{part}</>
-      );
-    });
-
-    return <>{highlights}</>;
-  };
+  const renderCount = useRenderCount();
+  console.log("FilterableTable rendered %s times.", renderCount);
 
   function getHeaderTextForProperty(property: string): string {
     return tableHeadersMap[property] ?? "";
   }
 
-  // const FilerableTableRows = (props) => {
-  //   const { loadingState, data, columnCount } = props;
-
-  //   if (loadingState === "loading") {
-  //     return (
-  //       <tr className={ccc("no-results")} colSpan={colCount}>
-  //         Loading...
-  //       </tr>
-  //     );
-  //   }
-  //   if (loadingState === "hasError") {
-  //     return (
-  //       <tr className={ccc("no-results")} colSpan={colCount}>
-  //         An issue occured while loading the data.
-  //       </tr>
-  //     );
-  //   }
-  //   return (
-  //     <>
-  //       {tableData.map((row, index) => (
-  //         <tr key={index}>
-  //           {Object.entries(row).map(([header, cell], cellIndex) => {
-  //             const cellKey = header + "_" + cellIndex;
-  //             const headerText = getHeaderTextForProperty(header);
-  //             return (
-  //               <td title={headerText} data-header={headerText} key={cellKey}>
-  //                 {getHighlightedText(`${cell}`, searchText)}
-  //               </td>
-  //             );
-  //           })}
-  //         </tr>
-  //       ))}
-  //     </>
-  //   );
-  // };
-
   return (
     // @ts-ignore
     <search className="FilterableTable">
-      <div className="filter-input-wrapper">
-        <label>
-          <span className="sr-only">Filter results table rows</span>
-          <input type="text" value={searchText} onChange={handleSearch} />
-        </label>
-      </div>
       <div className="filter-table-wrapper">
         <table>
           <caption className="sr-only">Filtered plants table</caption>
@@ -107,7 +85,7 @@ const FilterableResponsiveTable = () => {
                       data-header={headerText}
                       key={cellKey}
                     >
-                      {getHighlightedText(`${cell}`, searchText)}
+                      <HighlightText text={`${cell}`} highlight={searchText} />
                     </td>
                   );
                 })}
@@ -116,17 +94,13 @@ const FilterableResponsiveTable = () => {
           </tbody>
         </table>
       </div>
-      <footer>
-        {/* 
-          Implement support for selection and totals  
-        */}
-      </footer>
     </search>
   );
 };
 
 const App = () => (
   <>
+    <FilterInput />
     <Suspense fallback={`Loading plants...`}>
       <FilterableResponsiveTable />
     </Suspense>

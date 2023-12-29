@@ -2,11 +2,19 @@ import { atom } from "jotai";
 import { loadable } from "jotai/utils";
 import { Plant } from "./types";
 import { toSpaceCase, capitalizeFirstLetter } from "./util";
+import atomWithDebounce from "./atomWithDebounce";
 
 const API_URL =
   "https://raw.githubusercontent.com/toddpress/playData/344e85f56c5b086a1e32b470d981dba71a3b83f9/plants.json";
 
-export const searchTextAtom = atom("");
+export const {
+  isDebouncingAtom,
+  debouncedValueAtom: debouncedSearchTextAtom,
+  clearTimeoutAtom,
+  currentValueAtom: searchTextAtom,
+} = atomWithDebounce("", 200, true);
+
+// export const searchTextAtom = atom("");
 // Create a basic atom for fetching plant data
 export const plantsAtom = atom(async () => {
   try {
@@ -37,7 +45,7 @@ export const tableHeadersMapAtom = atom(async (get) => {
 
 export const searchResultsAtom = atom((get) => {
   const plants = get(plantsAtom);
-  const searchText = get(searchTextAtom);
+  const searchText = get(debouncedSearchTextAtom);
   return plants.filter((plant: Plant) => {
     const plantString = JSON.stringify(Object.values(plant));
     return plantString.toLowerCase().includes(searchText.toLowerCase());
