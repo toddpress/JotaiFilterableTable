@@ -1,0 +1,170 @@
+/* basic setup */
+html {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/* END basic setup */
+
+/* app styles */
+body {
+  padding: 0 1.6rem;
+  font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-weight: 300;
+  text-align: center;
+}
+/* END app styles */
+
+/* filterable table section */
+.FilterableTable .filter-table-wrapper {
+  height: 500px;
+}
+
+.FilterableTable .highlight {
+  background: yellow;
+}
+
+.FilterableTable thead tr {
+  background-color: rgb(0, 50, 83);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.FilterableTable thead {
+  position: sticky;
+  top: 0;
+}
+
+.FilterableTable thead tr th,
+.FilterableTable tbody tr td {
+  padding: 0.4rem 0.8rem;
+}
+
+.FilterableTable thead tr th {
+  font-weight: 400;
+  text-align: left;
+  position: relative;
+}
+
+.FilterableTable thead tr th:not(:last-child)::after {
+  content: " ";
+  display: block;
+  width: 0.06rem;
+  background-color: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  top: 50%;
+  right: 0;
+  height: 60%;
+  transform: translateY(-50%);
+}
+
+.FilterableTable table {
+  border-collapse: collapse;
+  overflow-y: auto;
+}
+
+.FilterableTable .filter-input-wrapper {
+  padding: 0.8rem 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.FilterableTable .filter-input-wrapper input {
+  display: block;
+  width: 100%;
+}
+
+.FilterableTable .filter-input-wrapper > label {
+  display: block;
+  flex-basis: clamp(200px, 22rem, 50%);
+}
+
+.FilterableTable tbody tr:nth-child(odd) {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.FilterableTable .filter-table-wrapper {
+  overflow: auto;
+}
+
+@media screen and (max-width: 600px) {
+  .FilterableTable table,
+  .FilterableTable thead,
+  .FilterableTable tbody,
+  .FilterableTable tr,
+  .FilterableTable th,
+  .FilterableTable td {
+    display: block;
+  }
+
+  .FilterableTable thead tr {
+    display: none;
+  }
+
+  .FilterableTable tr {
+    background-color: gainsboro;
+    padding: 1rem 0.8rem 0rem;
+    margin-bottom: 10px;
+    border-radius: 0.2rem;
+  }
+
+  .FilterableTable tbody tr td {
+    position: relative;
+    padding-left: 50%;
+    text-align: right;
+    padding-bottom: 0.8rem;
+    white-space: nowrap;
+    overflow: clip;
+    text-overflow: ellipsis;
+  }
+
+  .FilterableTable td::before {
+    content: attr(data-header);
+    position: absolute;
+    white-space: nowrap;
+    overflow: clip;
+    text-overflow: ellipsis;
+    left: 0;
+    width: calc(50% - 10px);
+    padding-right: 10px;
+    text-align: left;
+    font-weight: 400;
+  }
+
+  .FilterableTable td:not(:last-child)::after {
+    content: " ";
+    display: block;
+    width: 200%;
+    height: 0.1rem;
+    bottom: 0;
+    background-color: black;
+    opacity: 0.1;
+    transform: translate(-50%, 0.4rem);
+  }
+}
+/* END filterable table section */
+
+/* utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* END utility */
