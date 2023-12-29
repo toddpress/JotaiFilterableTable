@@ -1,11 +1,12 @@
 import { atom } from "jotai";
 import { loadable } from "jotai/utils";
+import { Plant } from "./types";
 import { toSpaceCase, capitalizeFirstLetter } from "./util";
-// Define the API endpoint
+
 const API_URL =
   "https://raw.githubusercontent.com/toddpress/playData/344e85f56c5b086a1e32b470d981dba71a3b83f9/plants.json";
-export const searchTextAtom = atom("");
 
+export const searchTextAtom = atom("");
 // Create a basic atom for fetching plant data
 export const plantsAtom = atom(async () => {
   try {
@@ -18,17 +19,6 @@ export const plantsAtom = atom(async () => {
     console.error("Error fetching plant data:", error);
     throw error;
   }
-});
-
-export const loadablePlantsAtom = loadable(plantsAtom);
-
-export const tableHeadersAtom = atom(async (get) => {
-  const data = await get(plantsAtom);
-  const firstRow = data[0] ?? {};
-
-  return Object.keys(firstRow).map((header) => {
-    return toSpaceCase(header).split(" ").map(capitalizeFirstLetter).join(" ");
-  });
 });
 
 export const tableHeadersMapAtom = atom(async (get) => {
