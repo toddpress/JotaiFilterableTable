@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Suspense } from "react";
 import { useAtom, useAtomValue } from "jotai";
 import {
-  loadablePlantsAtom,
   searchResultsAtom,
   searchTextAtom,
   tableHeadersMapAtom,
@@ -11,7 +10,6 @@ import {
 import "./styles.css";
 
 const FilterableResponsiveTable = () => {
-  // const loadablePlants = useAtom(loadablePlantsAtom);
   const [searchText, setSearchText] = useAtom(searchTextAtom);
   const tableData = useAtomValue(searchResultsAtom);
   const tableHeadersMap = useAtomValue(tableHeadersMapAtom);
@@ -41,6 +39,42 @@ const FilterableResponsiveTable = () => {
   function getHeaderTextForProperty(property: string): string {
     return tableHeadersMap[property] ?? "";
   }
+
+  // const FilerableTableRows = (props) => {
+  //   const { loadingState, data, columnCount } = props;
+
+  //   if (loadingState === "loading") {
+  //     return (
+  //       <tr className={ccc("no-results")} colSpan={colCount}>
+  //         Loading...
+  //       </tr>
+  //     );
+  //   }
+  //   if (loadingState === "hasError") {
+  //     return (
+  //       <tr className={ccc("no-results")} colSpan={colCount}>
+  //         An issue occured while loading the data.
+  //       </tr>
+  //     );
+  //   }
+  //   return (
+  //     <>
+  //       {tableData.map((row, index) => (
+  //         <tr key={index}>
+  //           {Object.entries(row).map(([header, cell], cellIndex) => {
+  //             const cellKey = header + "_" + cellIndex;
+  //             const headerText = getHeaderTextForProperty(header);
+  //             return (
+  //               <td title={headerText} data-header={headerText} key={cellKey}>
+  //                 {getHighlightedText(`${cell}`, searchText)}
+  //               </td>
+  //             );
+  //           })}
+  //         </tr>
+  //       ))}
+  //     </>
+  //   );
+  // };
 
   return (
     // @ts-ignore
